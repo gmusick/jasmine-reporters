@@ -66,7 +66,10 @@
         var items = results.getItems();
 
         for (var i = 0; i < items.length; i++) {
-          this.testcase += "<failure>" + items[i] + "</failure>";
+          var result = items[i];
+          if (result.passed && !result.passed()) {
+            this.testcase += "<failure>" + result + "</failure>";
+          }
         }
       }
 

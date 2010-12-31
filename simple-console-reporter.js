@@ -38,9 +38,13 @@
         this.log("");
         this.log(name + " failed:");
 
-        var messages = results.getItems();
-        for (var i = 0; i < messages.length; i++) {
-          this.log(messages[i]);
+        var items = results.getItems();
+
+        for (var i = 0; i < items.length; i++) {
+          var result = items[i];
+          if (result.passed && !result.passed()) {
+            this.log(result.toString());
+          }
         }
       }
     },
