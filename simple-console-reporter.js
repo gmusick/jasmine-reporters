@@ -1,10 +1,10 @@
 (function() {
-  var SimpleConsoleReporter = function() {
+  jasmine.SimpleConsoleReporter = function() {
     this.runnerStartTime;
     this.specStartTime;
   };
 
-  SimpleConsoleReporter.prototype = {
+  jasmine.SimpleConsoleReporter.prototype = {
     reportRunnerStarting: function(runner) {
       this.runnerStartTime = new Date();
     },
@@ -43,10 +43,6 @@
           this.log(messages[i]);
         }
       }
-
-      // for (var suite = spec.suite; suite; suite = suite.parentSuite) {
-      //   suite.elapsed = suite.elapsed ? (suite.elapsed + elapsed) : elapsed;
-      // }
     },
 
     log: function(str) {
@@ -55,7 +51,5 @@
         console.log(str);
       }
     }
-  }
-
-  jasmine.SimpleConsoleReporter = SimpleConsoleReporter;
+  };
 })();
