@@ -1,16 +1,5 @@
-// Jasmine reporter to format results in NUnit XML format for CI processing.
-//
-// Usage:
-// jasmine.getEnv().addReporter(new jasmine.NUnitReporter())
-// - outputs TestResult.xml file into the current directory
-//
-// jasmine.getEnv().addReporter(new jasmine.NUnitReporter("output/path"))
-// - outputs TestResult.xml file into the specified output path
-
 (function() {
-  jasmine.NUnitReporter = function(outputPath) {
-    this.outputPath = outputPath || "";
-
+  jasmine.NUnitReporter = function() {
     this.testSuites = {};
     this.testSpecs = {};
     this.testRun = {
@@ -48,7 +37,7 @@
 
     reportRunnerResults: function(runner) {
       var output = printTestResults(runner, this.testRun);
-      writeToFile(this.outputPath, output);
+      writeToFile(output);
     },
 
     reportSuiteResults: function(suite) {
@@ -118,11 +107,21 @@
   };
 
   function dateString(date) {
-    return new java.text.SimpleDateFormat("yyyy-MM-dd").format(date);
+    var year = date.getFullYear();
+    var month = date.getMonth();
+    var day = date.getDate();
+    return year + "-" + formatAsTwoDigits(month) + "-" + formatAsTwoDigits(day);
   }
 
   function timeString(date) {
-    return new java.text.SimpleDateFormat("HH:mm:ss").format(date);
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var seconds = date.getSeconds();
+    return hours + ":" + formatAsTwoDigits(minutes) + ":" + formatAsTwoDigits(seconds);
+  }
+
+  function formatAsTwoDigits(digit) {
+    return (digit < 10) ? "0" + digit : "" + digit;
   }
 
   function printTestResults(runner, testRun) {
@@ -198,22 +197,9 @@
     return output;
   }
 
-  function writeToFile(outputPath, text) {
-    if (outputPath.length > 0) {
-      var path = new java.io.File(outputPath);
-      if (!path.exists()) {
-        path.mkdirs();
-      }
-
-      if (!/\/$/.test(outputPath)) {
-        outputPath += "/";
-      }
+  function writeToFile(text) {
+    if (window.fileWriter && window.fileWriter.write) {
+      window.fileWriter.write(text);
     }
-
-    var name = "TestResult.xml";
-
-    var file = new java.io.BufferedWriter(new java.io.FileWriter(outputPath + name));
-    file.write(text);
-    file.close();
   }
 })();
